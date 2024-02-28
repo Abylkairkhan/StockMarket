@@ -2,8 +2,10 @@ package kz.abyl.stockmarket.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kz.abyl.stockmarket.data.csv.CSVParser
 import kz.abyl.stockmarket.data.local.StockDatabase
 import kz.abyl.stockmarket.data.mapper.toCompanyListing
+import kz.abyl.stockmarket.data.mapper.toCompanyListingEntity
 import kz.abyl.stockmarket.data.network.StockAPI
 import kz.abyl.stockmarket.domain.model.CompanyListing
 import kz.abyl.stockmarket.domain.repository.StockRepository
@@ -16,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class StockRepositoryImpl @Inject constructor(
     val stockAPI: StockAPI,
-    val db: StockDatabase
+    val db: StockDatabase,
+    val companyListingParser: CSVParser<CompanyListing>
 ) : StockRepository {
 
     private val dao = db.dao
@@ -41,14 +44,30 @@ class StockRepositoryImpl @Inject constructor(
 
             val remoteListings = try {
                 val response = stockAPI.getListOfStocks()
-
+                companyListingParser.parse(response.byteStream())
 
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                null
             } catch (e: HttpException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                null
+            }
+
+            remoteListings?.let { listings ->
+                emit(Resource.Success(listings))
+                dao.clearCompanyListings()
+                dao.insertCompanyListings(
+                    listings.map { it.toCompanyListingEntity() }
+                )
+                emit(Resource.Success(
+                    data = dao.searchCompanyListings("").map {
+                        it.toCompanyListing()
+                    }
+                ))
+                emit(Resource.Loading(false))
             }
         }
     }
