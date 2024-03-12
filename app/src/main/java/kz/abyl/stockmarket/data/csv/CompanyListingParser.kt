@@ -1,5 +1,6 @@
 package kz.abyl.stockmarket.data.csv
 
+import android.util.Log
 import com.opencsv.CSVReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

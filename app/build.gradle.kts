@@ -4,7 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp") version "1.6.10-1.0.2"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 }
 
 kotlin {
@@ -55,7 +55,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -73,6 +73,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -91,13 +92,12 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha")
 
     // Compose Nav Destinations
-    implementation ("io.github.raamcosta.compose-destinations:core:1.1.2-beta")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
+    implementation("io.github.raamcosta.compose-destinations:core:1.9.63")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.63")
 
     //Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.40.5")
-    kapt("com.google.dagger:hilt-android-compiler:2.40.5")
-    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation ("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
     kapt ("androidx.hilt:hilt-compiler:1.2.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 

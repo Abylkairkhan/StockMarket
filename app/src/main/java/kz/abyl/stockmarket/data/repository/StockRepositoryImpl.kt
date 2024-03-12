@@ -17,9 +17,9 @@ import javax.inject.Singleton
 
 @Singleton
 class StockRepositoryImpl @Inject constructor(
-    val stockAPI: StockAPI,
-    val db: StockDatabase,
-    val companyListingParser: CSVParser<CompanyListing>
+    private val stockAPI: StockAPI,
+    private val db: StockDatabase,
+    private val companyListingParser: CSVParser<CompanyListing>
 ) : StockRepository {
 
     private val dao = db.dao
@@ -45,7 +45,6 @@ class StockRepositoryImpl @Inject constructor(
             val remoteListings = try {
                 val response = stockAPI.getListOfStocks()
                 companyListingParser.parse(response.byteStream())
-
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
